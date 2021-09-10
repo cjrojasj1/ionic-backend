@@ -3,7 +3,7 @@ from flaskr.modelos.modelos import Usuario
 import unittest
 from flask import Flask
 
-from app import db
+from flaskr.app import db
 
 class BaseTestClass(unittest.TestCase):
 

@@ -1,8 +1,7 @@
 from flaskr.tests import BaseTestClass
 import unittest
 import json
-from app import app, db
-from flask import request
+from flaskr.app import app
 
 ROUTE_POST = '/recurso/compartido'
 class RecursosCompartidosTestCase(BaseTestClass):
@@ -17,11 +16,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso="ALBUM"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El usuario destinatario o de origen no puede ser vacio"\n'
+                result.status_code,
+                400
             )
 
     def test_usuario_origen_vacio(self):
@@ -34,11 +33,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso="ALBUM"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El usuario destinatario o de origen no puede ser vacio"\n'
+                result.status_code,
+                400
             )
 
     def test_tipo_recurso_vacio(self):
@@ -51,11 +50,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso=None
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El tipo de recurso no puede ser vacio"\n'
+                result.status_code,
+                400
             )
 
     def test_id_recurso_vacio(self):
@@ -68,11 +67,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= None,
                     tipo_recurso="ALBUM"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El id de recurso no puede ser vacio"\n'
+                result.status_code,
+                400
             )
 
     def test_usuario_destinatario_numero(self):
@@ -85,11 +84,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso="ALBUM"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El usuario destinatario debe ser un texto"\n'
+                result.status_code,
+                400
             )
 
     def test_usuario_origen_texto(self):
@@ -102,11 +101,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso="ALBUM"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El id de usuario origen debe ser un numero"\n'
+                result.status_code,
+                400
             )
 
     def test_tipo_recurso_invalido(self):
@@ -119,11 +118,11 @@ class RecursosCompartidosTestCase(BaseTestClass):
                     id_recurso= 3,
                     tipo_recurso="ALBUM2"
                 )),
-                content_type='application/json'
+                content_type='application/json', follow_redirects=True
             )
             self.assertEqual(
-                result.data,
-                b'"Error. El tipo de recurso debe ser ALBUM o CANCION"\n'
+                result.status_code,
+                400
             )
 
 if __name__ == '__main__':
