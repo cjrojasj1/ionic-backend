@@ -16,8 +16,10 @@ class Cancion(db.Model):
     minutos = db.Column(db.Integer)
     segundos = db.Column(db.Integer)
     interprete = db.Column(db.String(128))
+    usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
     albumes = db.relationship('Album', secondary = 'album_cancion', back_populates="canciones")
     compartidos = db.relationship('RecursoCompartido', backref='cancion')
+    propia = db.Column(db.String(5), default='True')
 
 class Medio(enum.Enum):
    DISCO = 1
@@ -37,6 +39,7 @@ class Album(db.Model):
     usuario = db.Column(db.Integer, db.ForeignKey("usuario.id"))
     canciones = db.relationship('Cancion', secondary = 'album_cancion', back_populates="albumes")
     compartidos = db.relationship('RecursoCompartido', backref='album')
+    propio = db.Column(db.Integer)
 
 class RecursoCompartido(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,7 +54,8 @@ class Usuario(db.Model):
     nombre = db.Column(db.String(50))
     contrasena = db.Column(db.String(50))
     albumes = db.relationship('Album', cascade='all, delete, delete-orphan')
-    compartidos = db.relationship('RecursoCompartido', backref='recurso_compartido')
+    compartidos = db.relationship('RecursoCompartido', backref='usuario_destino')
+    canciones = db.relationship('Cancion', cascade='all, delete, delete-orphan')
 
 class EnumADiccionario(fields.Field):
     def _serialize(self, value, attr, obj, **kwargs):
