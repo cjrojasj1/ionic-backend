@@ -15,7 +15,7 @@ class VistaCancionesUsuario(Resource):
 
     @jwt_required()
     def post(self, id_usuario):
-        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"], propia='True')
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
         usuario = Usuario.query.get_or_404(id_usuario)
         usuario.canciones.append(nueva_cancion)
 
@@ -28,25 +28,22 @@ class VistaCancionesUsuario(Resource):
         return cancion_schema.dump(nueva_cancion)
 
     # @jwt_required()
+
     def get(self, id_usuario):
         usuario = Usuario.query.get_or_404(id_usuario)
         propios = []
+
         for c in usuario.canciones:
             propios.append(c)
 
-        compartidos = []
+        # compartidos = []
         for c in usuario.compartidos:
             if c.cancion_id != None :
                 cc = Cancion.query.filter(Cancion.id == c.cancion_id).first()
                 cc.propia = 'False'
-                compartidos.append(cc)
+                propios.append(cc)
 
-        canciones = []
-        for cancion in propios + compartidos:
-            if cancion not in canciones:
-                canciones.append(cancion)
-
-        return [cancion_schema.dump(ca) for ca in canciones]
+        return [cancion_schema.dump(ca) for ca in propios]
 
 class VistaCancion(Resource):
 
