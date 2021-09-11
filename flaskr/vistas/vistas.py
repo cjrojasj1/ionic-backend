@@ -15,7 +15,7 @@ class VistaCancionesUsuario(Resource):
 
     @jwt_required()
     def post(self, id_usuario):
-        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"])
+        nueva_cancion = Cancion(titulo=request.json["titulo"], minutos=request.json["minutos"], segundos=request.json["segundos"], interprete=request.json["interprete"], propia='True')
         usuario = Usuario.query.get_or_404(id_usuario)
         usuario.canciones.append(nueva_cancion)
 
