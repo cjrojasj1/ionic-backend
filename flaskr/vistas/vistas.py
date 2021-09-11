@@ -126,19 +126,13 @@ class VistaAlbumesUsuario(Resource):
         for a in usuario.albumes:
             propios.append(a)
 
-        compartidos = []
         for c in usuario.compartidos:
             if c.album_id != None :
                 ac = Album.query.filter(Album.id == c.album_id).first()
                 ac.propio = 0
-                compartidos.append(ac)
+                propios.append(ac)
 
-        albumes = []
-        for album in propios + compartidos:
-            if album not in albumes:
-                albumes.append(album)
-
-        return [album_schema.dump(al) for al in albumes]
+        return [album_schema.dump(al) for al in propios]
 
 class VistaUsuario(Resource):
     def get(self, id_usuario):
