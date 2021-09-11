@@ -37,9 +37,10 @@ class VistaCancionesUsuario(Resource):
 
         compartidos = []
         for c in usuario.compartidos:
-            cc = Cancion.query.filter(Cancion.id == c.cancion.id).first()
-            cc.propia = 'False'
-            compartidos.append(cc)
+            if c.cancion_id != None :
+                cc = Cancion.query.filter(Cancion.id == c.cancion_id).first()
+                cc.propia = 'False'
+                compartidos.append(cc)
 
         canciones = []
         for cancion in propios + compartidos:
@@ -131,9 +132,10 @@ class VistaAlbumesUsuario(Resource):
 
         compartidos = []
         for c in usuario.compartidos:
-            ac = Album.query.filter(Album.id == c.album.id).first()
-            ac.propio = 0
-            compartidos.append(ac)
+            if c.album_id != None :
+                ac = Album.query.filter(Album.id == c.album_id).first()
+                ac.propio = 0
+                compartidos.append(ac)
 
         albumes = []
         for album in propios + compartidos:
@@ -234,6 +236,7 @@ class VistaRecursosCompartidos(Resource):
             return "Error. El id de recurso no puede ser vacio", 400
 
         usuarios_destinos = usuario_destino.split(',')
+        print(usuarios_destinos)
         for ud in usuarios_destinos:
             usuario_d = Usuario.query.filter(Usuario.nombre == ud).first()
             if usuario_d is None:
@@ -252,8 +255,8 @@ class VistaRecursosCompartidos(Resource):
             else:
                 recurso_compartido.cancion_id = id_recurso
 
-
-        db.session.add(recurso_compartido)
+            db.session.add(recurso_compartido)
+            
         db.session.commit()
         return recurso_compartido_schema.dump(recurso_compartido)
 
