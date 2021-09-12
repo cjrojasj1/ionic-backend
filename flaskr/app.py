@@ -5,6 +5,7 @@ from flaskr.vistas.vistas import VistaCancionesUsuario, VistaCancion, VistaSignI
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS, cross_origin
 
+
 app = create_app('default')
 app_context = app.app_context()
 app_context.push()

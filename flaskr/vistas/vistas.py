@@ -24,7 +24,7 @@ class VistaCancionesUsuario(Resource):
         except IntegrityError:
             db.session.rollback()
             return 'El usuario ya tiene una cancion con dicho nombre',409
-    
+
         return cancion_schema.dump(nueva_cancion)
 
     # @jwt_required()
@@ -204,25 +204,32 @@ class VistaRecursosCompartidos(Resource):
         id_recurso = request.json["id_recurso"]
 
         if usuario_destino == None or usuario_origen_id == None:
+            db.session.rollback()
             return "Error. El usuario destinatario o de origen no puede ser vacio", 400
 
         if type(usuario_destino) != str:
+            db.session.rollback()
             return "Error. El usuario destinatario debe ser un texto", 400
 
         if type(usuario_origen_id) != int:
+            db.session.rollback()
             return "Error. El id de usuario origen debe ser un numero", 400
 
         usuario_o = Usuario.query.filter(Usuario.id == usuario_origen_id).first()
         if usuario_o is None:
+            db.session.rollback()
             return "El usuario origen no existe", 400
 
         if tipo_recurso == None:
+            db.session.rollback()
             return "Error. El tipo de recurso no puede ser vacio", 400
 
         if tipo_recurso != "ALBUM" and tipo_recurso != "CANCION":
+            db.session.rollback()
             return "Error. El tipo de recurso debe ser ALBUM o CANCION", 400
 
         if id_recurso == None:
+            db.session.rollback()
             return "Error. El id de recurso no puede ser vacio", 400
 
         usuarios_destinos = usuario_destino.split(',')
@@ -231,8 +238,10 @@ class VistaRecursosCompartidos(Resource):
             usuario_d = Usuario.query.filter(Usuario.nombre == ud).first()
             if usuario_d is None:
                 if tipo_recurso == "ALBUM":
+                    db.session.rollback()
                     return 'No se puede compartir el álbum porque una o más personas no se encuentran registradas en Ionic.', 400
                 else:
+                    db.session.rollback()
                     return 'No se puede compartir la canción porque una o más personas no se encuentran registradas en Ionic.', 400
 
             recurso_compartido = RecursoCompartido(
@@ -246,7 +255,7 @@ class VistaRecursosCompartidos(Resource):
                 recurso_compartido.cancion_id = id_recurso
 
             db.session.add(recurso_compartido)
-            
+
         db.session.commit()
         return recurso_compartido_schema.dump(recurso_compartido)
 
