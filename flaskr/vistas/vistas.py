@@ -40,8 +40,9 @@ class VistaCancionesUsuario(Resource):
         for c in usuario.compartidos:
             if c.cancion_id != None :
                 cc = Cancion.query.filter(Cancion.id == c.cancion_id).first()
-                cc.propia = 'False'
-                propios.append(cc)
+                nueva_cancion = Cancion(titulo=cc.titulo, minutos=cc.titulo, segundos=cc.titulo, interprete=cc.titulo, propia='False')
+                #cc.propia = 'False'
+                propios.append(nueva_cancion)
 
         return [cancion_schema.dump(ca) for ca in propios]
 
@@ -129,8 +130,9 @@ class VistaAlbumesUsuario(Resource):
         for c in usuario.compartidos:
             if c.album_id != None :
                 ac = Album.query.filter(Album.id == c.album_id).first()
-                ac.propio = 0
-                propios.append(ac)
+                nuevo_album = Album(titulo=ac.titulo, anio=ac.anio, descripcion=ac.descripcion, medio=ac.medio, propio=0)
+                #ac.propio = 0
+                propios.append(nuevo_album)
 
         return [album_schema.dump(al) for al in propios]
 
